@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Box, Button, Text, useToast } from "@chakra-ui/react";
 import { executeCode } from "../api";
+import { go2json } from "../go2json.js";
 
 const Output = ({ editorRef, language }) => {
   const toast = useToast();
@@ -13,9 +14,16 @@ const Output = ({ editorRef, language }) => {
     if (!sourceCode) return;
     try {
       setIsLoading(true);
-      const { run: result } = await executeCode(language, sourceCode);
-      setOutput(result.output.split("\n"));
-      result.stderr ? setIsError(true) : setIsError(false);
+      if (language === "go") {
+        // Run locally
+        const result = go2json.go2ast(sourceCode);
+        console.log(result);
+        setOutput(JSON.stringify(result).split("\n"));
+      } else {
+        const {run: result} = await executeCode(language, sourceCode);
+        setOutput(result.output.split("\n"));
+        result.stderr ? setIsError(true) : setIsError(false);
+      }
     } catch (error) {
       console.log(error);
       toast({
