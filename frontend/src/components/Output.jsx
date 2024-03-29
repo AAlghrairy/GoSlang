@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, Button, Text, useToast } from "@chakra-ui/react";
 import { executeCode } from "../api";
-import { go2json } from "../go2json.js";
+// import { go2json } from "../go2json.js";
 import {ECE} from "../../../Go-Slang/ECE.ts"
 
 const Output = ({ editorRef, language }) => {

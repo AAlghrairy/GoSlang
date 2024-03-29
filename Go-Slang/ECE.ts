@@ -1,4 +1,4 @@
-import go2json = require("./go2json/go2json.js")
+import { go2json } from "./go2json/go2json.js";
 
 export class ECE {
     public static execute(sourceCode: string): any[] {

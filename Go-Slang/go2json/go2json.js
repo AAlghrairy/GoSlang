@@ -1,4 +1,4 @@
-var go2json = new function(){let that = this;
+export var go2json = new function(){let that = this;
   const SIGIL = [
     /*TRIPLE*/ "<<=",">>=",
     /*DOUBLE*/ "+=","-=","*=","/=","%=","++","--",":=","==","&&","||",">=","<=","<<",">>","&=","^=","|=","!=","<-",
