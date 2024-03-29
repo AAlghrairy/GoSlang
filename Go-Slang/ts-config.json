@@ -1,8 +1,0 @@
-{
-  "compilerOptions": {
-    "module": "CommonJS",
-    "allowJs": true,
-    "outDir": "dist"
-  },
-  "include": ["src"]
-}
