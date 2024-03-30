@@ -7,10 +7,10 @@ export class ECE {
     private static apply_binop = (v1, op, v2) => this.binop_microcode[op](v1,v2);
 
     private static binop_microcode = {
-        '+': (x, y) => x + y,
-        '*':   (x, y) => x * y,
-        '-':   (x, y) => x - y,
-        '/':   (x, y) => x / y
+        '+': (x: number, y: number) => x + y,
+        '*':   (x: number, y: number) => x * y,
+        '-':   (x: number, y: number) => x - y,
+        '/':   (x: number, y: number) => x / y
     }
 
     private static microcode = {
@@ -19,20 +19,15 @@ export class ECE {
         exec:
             cmd => this.C.push({tag: "expr"}, cmd.expr),
         expr:
-            cmd => this.S.push(this.apply_binop(cmd.body[0], cmd.body[1], cmd.body[2]))
+            cmd => this.S.push(this.apply_binop(cmd.body[0].value, cmd.body[1].value, cmd.body[2].value))
 
     }
-    static C:  {tag: string; } [] = [];
+    static C:  {tag: any; } [] = [];
     static S: any[] = [];
     static E: any[] = [];
 
     private static step_limit: number = 1000000;
-    private binop_microcode: {
-        "*": (x, y) => number;
-        "+": (x, y) => any;
-        "-": (x, y) => number;
-        "/": (x, y) => number
-    };
+
     public static executeTrue(sourceCode: string): string {
         this.C = go2json.go2ast(sourceCode);
         let S = []
