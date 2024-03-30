@@ -17,9 +17,11 @@ const Output = ({ editorRef, language }) => {
       setIsLoading(true);
       if (language === "go") {
         // Run locally
-        const result = ECE.execute(sourceCode);//go2json.go2ast(sourceCode);
-        //console.log(result);
+        //const result = ECE.executeTrue(sourceCode);
+        //setOutput(result)
+        const result = ECE.execute(sourceCode);
         setOutput(JSON.stringify(result).split("\n"));
+        //console.log(result);
       } else {
         const {run: result} = await executeCode(language, sourceCode);
         setOutput(result.output.split("\n"));
