@@ -17,10 +17,10 @@ const Output = ({ editorRef, language }) => {
       setIsLoading(true);
       if (language === "go") {
         // Run locally
-        //const result = ECE.executeTrue(sourceCode);
-        //setOutput(result)
         const result = ECE.execute(sourceCode);
-        setOutput(JSON.stringify(result).split("\n"));
+        setOutput(result.split("\n"));
+        // const result = ECE.executeJSON(sourceCode);
+        // setOutput(JSON.stringify(result).split("\n"));
         //console.log(result);
       } else {
         const {run: result} = await executeCode(language, sourceCode);

@@ -17,27 +17,32 @@ export class ECE {
         package:
             cmd => null,
         exec:
-            cmd => this.C.push({tag: "expr"}, cmd.expr),
+            cmd => this.C.push(cmd.expr),
         expr:
-            cmd => this.S.push(this.apply_binop(cmd.body[0].value, cmd.body[1].value, cmd.body[2].value))
-
+            cmd => {
+            if(cmd.expr !== undefined) {
+                return null;
+            } else {
+                this.S.push(this.apply_binop(Number(cmd.body[0].value), cmd.body[1].value, Number(cmd.body[2].value)))}
+            }
     }
-    static C:  {tag: any; } [] = [];
-    static S: any[] = [];
-    static E: any[] = [];
+    private static C:  {tag: any; } [] = [];
+    private static S: any[] = [];
+    private static E: any[] = [];
 
     private static step_limit: number = 1000000;
 
-    public static executeTrue(sourceCode: string): string {
+    public static execute(sourceCode: string): string {
         this.C = go2json.go2ast(sourceCode);
-        let S = []
-        let E = [] //global_environment
+        this.S = []
+        this.E = [] //global_environment
 
         for(let i = 0; i < this.step_limit; i++) {
             if (this.C.length === 0) break
             const cmd = this.C.pop()
             if (this.microcode.hasOwnProperty(cmd.tag)) {
                 this.microcode[cmd.tag](cmd)
+                //window.console.log(this.S)
             } else {
                 throw new Error("unknown command: " + cmd.tag)
             }
@@ -46,9 +51,11 @@ export class ECE {
                 throw new Error("step limit exceeded ")
             }
         }
-        return String(S[0]);
+
+        window.console.log(String(this.S[0]))
+        return String(this.S[0]);
     }
-    public static execute(sourceCode: string): string[] {
+    public static executeJSON(sourceCode: string): string[] {
         return go2json.go2ast(sourceCode);
     }
 }
