@@ -1,8 +1,11 @@
 // If you use Node.js and not https://sourceacademy.org,
 // uncomment the following two lines:
 
-Object.entries(require('sicp'))
-      .forEach(([name, exported]) => global[name] = exported);
+// Object.entries(require('sicp'))
+//       .forEach(([name, exported]) => global[name] = exported);
+
+import { head, tail, is_null, parse, pair, map, display, error, stringify, for_each, arity, cmd,
+         is_number, is_string, is_boolean, is_pair, is_undefined, get_time, parse_int, char_at } from 'sicp';
 
 /* ****************************************
  * Explicit-control evaluator for Source §4
@@ -291,7 +294,7 @@ const builtin_mapping = {
     arity         : x => typeof x === 'object'
         ? x.arity
         : error(x, 'arity expects function, received:'),
-    math_abs      : math_abs,
+    /*math_abs      : math_abs,
     math_acos     : math_acos,
     math_acosh    : math_acosh,
     math_asin     : math_asin,
@@ -324,13 +327,13 @@ const builtin_mapping = {
     math_sinh     : math_sinh,
     math_sqrt     : math_sqrt,
     math_tanh     : math_tanh,
-    math_trunc    : math_trunc,
+    math_trunc    : math_trunc,*/
     pair          : pair,
     is_pair       : is_pair,
     head          : head,
     tail          : tail,
     is_null       : is_null,
-    set_head      : set_head,
+    /*set_head      : set_head,
     set_tail      : set_tail,
     array_length  : array_length,
     is_array      : is_array,
@@ -352,7 +355,7 @@ const builtin_mapping = {
     draw_data     : draw_data,
     parse         : parse,
     tokenize      : tokenize,
-    apply_in_underlying_javascript: apply_in_underlying_javascript
+    apply_in_underlying_javascript: apply_in_underlying_javascript*/
 }
 
 const apply_builtin = (builtin_symbol, args) =>
@@ -374,14 +377,14 @@ for (const key in builtin_mapping)
     }
 // fill global frame with built-in constants
 global_frame.undefined    = undefined
-global_frame.math_E       = math_E
+/*global_frame.math_E       = math_E
 global_frame.math_LN10    = math_LN10
 global_frame.math_LN2     = math_LN2
 global_frame.math_LOG10E  = math_LOG10E
 global_frame.math_LOG2E   = math_LOG2E
 global_frame.math_PI      = math_PI
 global_frame.math_SQRT1_2 = math_SQRT1_2
-global_frame.math_SQRT2   = math_SQRT2
+global_frame.math_SQRT2   = math_SQRT2*/
 
 // An environment is null or a pair whose head is a frame
 // and whose tail is an environment.
@@ -748,7 +751,7 @@ const microcode = {
 
 const step_limit = 1000000
 
-const execute = (program) => {
+export const execute = (program) => {
     C = [parse_to_json(program)]
     S = []
     E = global_environment
