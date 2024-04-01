@@ -1,9 +1,6 @@
 import { go2json } from './go2json/go2json.js';
 
 export class ECE {
-    readonly head = (arr: any[]) => arr[0];
-    readonly tail = (arr: any[]) => arr.slice(1);
-
     private static apply_binop = (v1, op, v2) => this.binop_microcode[op](v1,v2);
 
     private static binop_microcode = {
@@ -39,7 +36,7 @@ export class ECE {
             if (this.is_unassigned(value)) this.error(sym, 'Unassigned name')
             return value
         } else {
-            return this.lookup(sym, env.slice(1))
+            return this.lookup(sym, env[1])
         }
     };
     private static assign = (sym: string, value: any, env: any[]) => {
@@ -47,7 +44,7 @@ export class ECE {
         if (env[0].hasOwnProperty(sym)) {
             env[0][sym] = value
         } else {
-            this.assign(sym, value, env.slice(1))
+            this.assign(sym, value, env[1])
         }
     }
     private static extends = (locals: any[], assign: any[], env: any[]) => {
@@ -79,7 +76,8 @@ export class ECE {
     }
 
     private static builtin_mapping = {
-        error: this.error
+        error: this.error,
+        display: (msg: string) => console.log(msg)
     }
     private static apply_builtin = (sym: string, args: any[]) => {
         return this.builtin_mapping[sym](...args)
@@ -90,6 +88,8 @@ export class ECE {
             cmd => this.S.push(cmd.value),
         number:
             cmd => this.S.push(Number(cmd.value)),
+        string:
+            cmd => this.S.push(String(cmd.value)),
         name:
             cmd => this.S.push(this.lookup(cmd.sym, this.E)),
         binop:
@@ -153,12 +153,14 @@ export class ECE {
                 for (const single of seq)
                     this.C.push(single)
             },
+        ident:
+            cmd => this.C.push({tag: 'name', sym: cmd.value}),
         call:
             cmd => {
                 this.C.push({tag: 'call_i', arity: cmd.args.length})
                 for (let i = cmd.args.length - 1; i >= 0; i--)
                     this.C.push(cmd.args[i])
-                this.C.push(cmd.fun)
+                this.C.push(cmd.func)
             },
         call_i:
             cmd => {
@@ -236,7 +238,7 @@ export class ECE {
                 stmts: go2json.go2ast(sourceCode).concat([{
                     tag: 'call',
                     args: [],
-                    fun: {tag: 'name', sym: 'main'}
+                    func: {tag: 'name', sym: 'main'}
                 }])
             }
         }]
